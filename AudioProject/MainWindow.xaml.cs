@@ -24,8 +24,6 @@ namespace AudioProject
         private AudioQueue audioQueue = new AudioQueue();
         private bool userIsDraggingSlider = false;
         public bool WindowClosing = false;
-        private readonly List<string> AudioPaths = new List<string>();
-        private int QueueIndex = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -55,7 +53,6 @@ namespace AudioProject
                 lbFiles.BeginInit();
                 foreach (string filename in openFileDialog.FileNames)
                 {
-                    AudioPaths.Add(filename);
                     lbFiles.Items.Add(Path.GetFileName(filename));
                 }
                 lbFiles.EndInit();
