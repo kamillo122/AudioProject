@@ -1,0 +1,52 @@
+﻿<Window x:Class="AudioProject.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AudioProject"
+        mc:Ignorable="d"
+        Background="Black"
+        Foreground="WhiteSmoke"
+        FontFamily="Calibri"
+        Icon="./Images/settings.png"
+        Title="Settings" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Content="Queue" Foreground="WhiteSmoke" FontSize="20"></Label>
+        <Rectangle Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Fill="WhiteSmoke" Height="3">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Content="Audio" Foreground="WhiteSmoke" FontSize="20"></Label>
+        <Rectangle Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Fill="WhiteSmoke" Height="3">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="2" Content="Appearance" Foreground="WhiteSmoke" FontSize="20"></Label>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1" Content="Audio Device" Foreground="WhiteSmoke" FontSize="16"></Label>
+        <ComboBox Name="AudioDeviceComboBox" Grid.Row="2" Grid.Column="1" Margin="5,5,5,5"></ComboBox>
+    </Grid>
+</Window>
