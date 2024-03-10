@@ -43,5 +43,9 @@ namespace AudioProject
             }
             return AudioPaths[QueueIndex];
         }
+        public string GetRandomAudio()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,78 +7,107 @@ using NAudio.WaveFormRenderer;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace AudioProject
 {
-    public class Visualization
+    public partial class Visualization : UserControl
     {
-        private readonly WaveFormRenderer waveFormRenderer;
-        private readonly WaveFormRendererSettings soundCloudGrayTransparentBlocks = new SoundCloudBlockWaveFormSettings(System.Drawing.Color.FromArgb(196, 224, 225, 224), System.Drawing.Color.FromArgb(64, 224, 224, 224), System.Drawing.Color.FromArgb(196, 128, 128, 128),
-                System.Drawing.Color.FromArgb(64, 128, 128, 128))
+        int renderPosition;
+        double yTranslate = 40;
+        double yScale = 40;
+        double xScale = 2;
+        int blankZone = 10;
+
+        readonly Polygon waveForm = new Polygon();
+
+        public Visualization(Canvas mainCanvas)
         {
-            Name = "SoundCloud Gray Transparent Blocks",
-            PixelsPerPeak = 4,
-            SpacerPixels = 1,
-            TopSpacerGradientStartColor = System.Drawing.Color.FromArgb(64, 224, 224, 224),
-            BackgroundColor = System.Drawing.Color.Transparent,
-            TopHeight = 60,
-            BottomHeight = 60,
-        };
-        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DeleteObject([In] IntPtr hObject);
-        public ImageSource ImageSourceFromBitmap(System.Drawing.Bitmap bmp)
+            SizeChanged += OnSizeChanged;
+            waveForm.Stroke = Foreground;
+            waveForm.StrokeThickness = 1;
+            waveForm.Fill = new SolidColorBrush(Colors.Bisque);
+            mainCanvas.Children.Add(waveForm);
+        }
+
+        void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var handle = bmp.GetHbitmap();
-            try
+            // We will remove everything as we are going to rescale vertically
+            renderPosition = 0;
+            ClearAllPoints();
+
+            yTranslate = ActualHeight / 2;
+            yScale = ActualHeight / 2;
+        }
+
+        private void ClearAllPoints()
+        {
+            waveForm.Points.Clear();
+        }
+
+        private int Points
+        {
+            get { return waveForm.Points.Count / 2; }
+        }
+
+        public void AddValue(float maxValue, float minValue)
+        {
+            int visiblePixels = (int)(ActualWidth / xScale);
+            if (visiblePixels > 0)
             {
-                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                CreatePoint(maxValue, minValue);
+
+                if (renderPosition > visiblePixels)
+                {
+                    renderPosition = 0;
+                }
+                int erasePosition = (renderPosition + blankZone) % visiblePixels;
+                if (erasePosition < Points)
+                {
+                    double yPos = SampleToYPosition(0);
+                    waveForm.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
+                    waveForm.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
+                }
             }
-            finally { DeleteObject(handle); }
         }
-        private void RenderWaveForm()
+
+        private int BottomPointIndex(int position)
         {
-            //if (audioFile == null) return;
-            //RenderedImage.Source = null;
-            //var peakProvider = new MaxPeakProvider();
-            //RenderThreadFunc(peakProvider, soundCloudGrayTransparentBlocks);
+            return waveForm.Points.Count - position - 1;
         }
-        private void RenderThreadFunc(IPeakProvider peakProvider, WaveFormRendererSettings settings)
+
+        private double SampleToYPosition(float value)
         {
-            //Image image = null;
-            //try
-            //{
-            //using (var waveStream = new AudioFileReader(Path.GetFullPath(AudioPaths[QueueIndex])))
-            //{
-            //image = waveFormRenderer.Render(waveStream, peakProvider, settings);
-            //if (File.Exists(@"F:\studia\semestr_4\Programowanie IV\AudioProject\AudioProject\Images\rendered.PNG"))
-            //{
-            //RenderedImage.Source = null;
-            //File.Delete(@"F:\studia\semestr_4\Programowanie IV\AudioProject\AudioProject\Images\rendered.PNG");
-            //}
-            //else
-            //{
-            // image.Save(@"F:\studia\semestr_4\Programowanie IV\AudioProject\AudioProject\Images\rendered.PNG", System.Drawing.Imaging.ImageFormat.Png);
-            //}
-            //}
-            //}
-            //catch (Exception ex)
-            //{
-            //MessageBox.Show(ex.Message);
-            //}
-            //FinishedRender(image);
+            return yTranslate + value * yScale;
         }
-        private void FinishedRender(System.Drawing.Image image)
+
+        private void CreatePoint(float topValue, float bottomValue)
         {
-            if (image == null) return;
-            try
+            double topYPos = SampleToYPosition(topValue);
+            double bottomYPos = SampleToYPosition(bottomValue);
+            double xPos = renderPosition * xScale;
+            if (renderPosition >= Points)
             {
-                System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(image);
-                //RenderedImage.Source = bmp;
-                //RenderedImage.Source = new BitmapImage(new Uri(@"F:\studia\semestr_4\Programowanie IV\AudioProject\AudioProject\Images\rendered.PNG"));
-                image.Dispose();
+                int insertPos = Points;
+                waveForm.Points.Insert(insertPos, new Point(xPos, topYPos));
+                waveForm.Points.Insert(insertPos + 1, new Point(xPos, bottomYPos));
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            else
+            {
+                waveForm.Points[renderPosition] = new Point(xPos, topYPos);
+                waveForm.Points[BottomPointIndex(renderPosition)] = new Point(xPos, bottomYPos);
+            }
+            renderPosition++;
+        }
+
+        /// <summary>
+        /// Clears the waveform and repositions on the left
+        /// </summary>
+        public void Reset()
+        {
+            renderPosition = 0;
+            ClearAllPoints();
         }
     }
 }

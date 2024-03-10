@@ -22,6 +22,7 @@ namespace AudioProject
     {
         private AudioPlayer player = new AudioPlayer();
         private AudioQueue audioQueue = new AudioQueue();
+        private Visualization PolygonVisualizer;
         private bool userIsDraggingSlider = false;
         public bool WindowClosing = false;
         public MainWindow()
@@ -31,6 +32,8 @@ namespace AudioProject
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timerTick;
             timer.Start();
+            PolygonVisualizer = new Visualization(canvas);
+
         }
         private void timerTick(object sender, EventArgs e)
         {
