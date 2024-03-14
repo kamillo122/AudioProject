@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using NAudio.Extras;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,8 @@ namespace AudioProject
     {
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFileReader;
+
+        public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
 
         public void Load(string fileName)
         {
@@ -51,7 +54,10 @@ namespace AudioProject
             {
                 var inputStream = new AudioFileReader(fileName);
                 audioFileReader = inputStream;
-                outputDevice.Init(audioFileReader);
+                var aggregator = new SampleAggregator(inputStream);
+                aggregator.NotificationCount = inputStream.WaveFormat.SampleRate / 100;
+                aggregator.MaximumCalculated += (s, a) => MaximumCalculated?.Invoke(this, a);
+                outputDevice.Init(aggregator);
             }
             catch (Exception e)
             {

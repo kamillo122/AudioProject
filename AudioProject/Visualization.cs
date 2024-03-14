@@ -1,19 +1,16 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.Windows;
-using NAudio.Wave;
-using NAudio.WaveFormRenderer;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.IO;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace AudioProject
 {
-    public partial class Visualization : UserControl
+    /// <summary>
+    /// Interaction logic for PolygonWaveFormControl.xaml
+    /// </summary>
+    public class Visualization : Canvas, IWaveFormRenderer
     {
+        /*
         int renderPosition;
         double yTranslate = 40;
         double yScale = 40;
@@ -21,24 +18,26 @@ namespace AudioProject
         int blankZone = 10;
 
         readonly Polygon waveForm = new Polygon();
+        private Canvas mainCanvas;
 
-        public Visualization(Canvas mainCanvas)
+        public Visualization(Canvas canvas)
         {
-            SizeChanged += OnSizeChanged;
-            waveForm.Stroke = Foreground;
+            mainCanvas = canvas;
+            waveForm.Stroke = Brushes.WhiteSmoke;
             waveForm.StrokeThickness = 1;
-            waveForm.Fill = new SolidColorBrush(Colors.Bisque);
-            mainCanvas.Children.Add(waveForm);
+            waveForm.Fill = new SolidColorBrush(Colors.WhiteSmoke);
+            //mainCanvas.Children.Add(waveForm);
+            //mainCanvas.Children.Add(topLine);
+            //mainCanvas.Children.Add(bottomLine);
         }
-
-        void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        public void WaveFormControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // We will remove everything as we are going to rescale vertically
             renderPosition = 0;
             ClearAllPoints();
 
-            yTranslate = ActualHeight / 2;
-            yScale = ActualHeight / 2;
+            yTranslate = mainCanvas.ActualHeight / 2;
+            yScale = mainCanvas.ActualHeight / 2;
         }
 
         private void ClearAllPoints()
@@ -53,23 +52,26 @@ namespace AudioProject
 
         public void AddValue(float maxValue, float minValue)
         {
-            int visiblePixels = (int)(ActualWidth / xScale);
-            if (visiblePixels > 0)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                CreatePoint(maxValue, minValue);
+                int visiblePixels = (int)(mainCanvas.ActualWidth / xScale);
+                if (visiblePixels > 0)
+                {
+                    CreatePoint(maxValue, minValue);
 
-                if (renderPosition > visiblePixels)
-                {
-                    renderPosition = 0;
+                    if (renderPosition > visiblePixels)
+                    {
+                        renderPosition = 0;
+                    }
+                    int erasePosition = (renderPosition + blankZone) % visiblePixels;
+                    if (erasePosition < Points)
+                    {
+                        double yPos = SampleToYPosition(0);
+                        waveForm.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
+                        waveForm.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
+                    }
                 }
-                int erasePosition = (renderPosition + blankZone) % visiblePixels;
-                if (erasePosition < Points)
-                {
-                    double yPos = SampleToYPosition(0);
-                    waveForm.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
-                    waveForm.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
-                }
-            }
+            });
         }
 
         private int BottomPointIndex(int position)
@@ -97,6 +99,96 @@ namespace AudioProject
             {
                 waveForm.Points[renderPosition] = new Point(xPos, topYPos);
                 waveForm.Points[BottomPointIndex(renderPosition)] = new Point(xPos, bottomYPos);
+            }
+            renderPosition++;
+        }
+
+        /// <summary>
+        /// Clears the waveform and repositions on the left
+        /// </summary>
+        public void Reset()
+        {
+            renderPosition = 0;
+            ClearAllPoints();
+        }
+        */
+        int renderPosition;
+        double yTranslate = 40;
+        double yScale = 40;
+        int blankZone = 10;
+
+        readonly Polyline topLine = new Polyline();
+        readonly Polyline bottomLine = new Polyline();
+        private Canvas mainCanvas;
+
+        public Visualization(Canvas canvas)
+        {
+            mainCanvas = canvas;
+            topLine.Stroke = Brushes.WhiteSmoke;
+            bottomLine.Stroke = Brushes.WhiteSmoke;
+            topLine.StrokeThickness = 1;
+            bottomLine.StrokeThickness = 1;
+            mainCanvas.Children.Add(topLine);
+            mainCanvas.Children.Add(bottomLine);
+        }
+        public void WaveFormControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // We will remove everything as we are going to rescale vertically
+            renderPosition = 0;
+            ClearAllPoints();
+
+            yTranslate = mainCanvas.ActualHeight / 2;
+            yScale = mainCanvas.ActualHeight / 2;
+        }
+
+        private void ClearAllPoints()
+        {
+            topLine.Points.Clear();
+            bottomLine.Points.Clear();
+        }
+
+        public void AddValue(float maxValue, float minValue)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                int pixelWidth = (int)mainCanvas.ActualWidth;
+                if (pixelWidth > 0)
+                {
+                    CreatePoint(maxValue, minValue);
+
+                    if (renderPosition > mainCanvas.ActualWidth)
+                    {
+                        renderPosition = 0;
+                    }
+                    int erasePosition = (renderPosition + blankZone) % pixelWidth;
+                    if (erasePosition < topLine.Points.Count)
+                    {
+                        double yPos = SampleToYPosition(0);
+                        topLine.Points[erasePosition] = new Point(erasePosition, yPos);
+                        bottomLine.Points[erasePosition] = new Point(erasePosition, yPos);
+                    }
+                }
+            });
+        }
+
+        private double SampleToYPosition(float value)
+        {
+            return yTranslate + value * yScale;
+        }
+
+        private void CreatePoint(float topValue, float bottomValue)
+        {
+            double topLinePos = SampleToYPosition(topValue);
+            double bottomLinePos = SampleToYPosition(bottomValue);
+            if (renderPosition >= topLine.Points.Count)
+            {
+                topLine.Points.Add(new Point(renderPosition, topLinePos));
+                bottomLine.Points.Add(new Point(renderPosition, bottomLinePos));
+            }
+            else
+            {
+                topLine.Points[renderPosition] = new Point(renderPosition, topLinePos);
+                bottomLine.Points[renderPosition] = new Point(renderPosition, bottomLinePos);
             }
             renderPosition++;
         }

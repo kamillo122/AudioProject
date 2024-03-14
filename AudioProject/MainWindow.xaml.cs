@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NAudio.Extras;
 using NAudio.Wave;
 using NAudio.WaveFormRenderer;
 using System;
@@ -22,18 +23,19 @@ namespace AudioProject
     {
         private AudioPlayer player = new AudioPlayer();
         private AudioQueue audioQueue = new AudioQueue();
-        private Visualization PolygonVisualizer;
+        private Visualization polygonVisualizer;
         private bool userIsDraggingSlider = false;
         public bool WindowClosing = false;
+        private readonly DispatcherTimer timer = new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
-            DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timerTick;
             timer.Start();
-            PolygonVisualizer = new Visualization(canvas);
-
+            player.MaximumCalculated += OnMaximumCalculated;
+            polygonVisualizer = new Visualization(canvas);
+            canvas.SizeChanged += polygonVisualizer.WaveFormControl_SizeChanged;
         }
         private void timerTick(object sender, EventArgs e)
         {
@@ -62,10 +64,18 @@ namespace AudioProject
                 player.Load(audioQueue.GetNextAudio());
             }
         }
+        private void OnMaximumCalculated(object sender, MaxSampleEventArgs e)
+        {
+            polygonVisualizer.AddValue(e.MaxSample, e.MinSample);
+        }
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
             if (PlayButton.Content == FindResource("Play"))
             {
+                if (timer.IsEnabled == false)
+                {
+                    timer.Start();
+                }
                 if (audioQueue.GetNextAudio() == String.Empty)
                 {
                     PlayButton.Content = FindResource("Stop");
@@ -95,10 +105,12 @@ namespace AudioProject
                 if (player.CheckDidDeviceCreated() && player.CheckAudioStream())
                 {
                     player.Pause();
+                    timer.Stop();
                 }
                 if (!player.CheckDidDeviceCreated() || !player.CheckAudioStream())
                 {
                     player.Stop();
+                    timer.Stop();
                 }
             }
         }
@@ -168,14 +180,6 @@ namespace AudioProject
             audioQueue.DecreaseQueueIndex();
             player.Load(audioQueue.GetNextAudio());
             player.Play();
-            if (PlayButton.Content == FindResource("Play"))
-            {
-                PlayButton.Content = FindResource("Stop");
-            }
-            else
-            {
-                PlayButton.Content = FindResource("Play");
-            }
         }
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -190,6 +194,14 @@ namespace AudioProject
                 audioQueue.SetQueueIndex(lbFiles.SelectedIndex);
                 player.Load(audioQueue.GetNextAudio());
                 player.Play();
+                if (PlayButton.Content == FindResource("Play"))
+                {
+                    PlayButton.Content = FindResource("Stop");
+                }
+                else
+                {
+                    PlayButton.Content = FindResource("Play");
+                }
             }
         }
     }

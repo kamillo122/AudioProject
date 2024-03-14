@@ -64,6 +64,6 @@
         <Button x:Name="SettingsButton" Grid.Column="6" Grid.Row="0" Margin="6,6,6,6" Click="SettingsButton_Click">
             <DynamicResource ResourceKey="Settings"/>
         </Button>
-        <Canvas Name="canvas" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="5" Margin="195,0,0,0"></Canvas>
+        <Canvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="5" Margin="0"/>
     </Grid>
 </Window>
