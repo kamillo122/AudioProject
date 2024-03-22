@@ -1,18 +1,14 @@
-﻿using Microsoft.Win32;
-using NAudio.Extras;
-using NAudio.Wave;
-using NAudio.WaveFormRenderer;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
+
 using System.Windows.Threading;
+using System.Windows.Forms;
+
+using NAudio.Extras;
+using NAudio.Wave;
 
 namespace AudioProject
 {
@@ -23,37 +19,41 @@ namespace AudioProject
     {
         private AudioPlayer player = new AudioPlayer();
         private AudioQueue audioQueue = new AudioQueue();
-        private Visualization polygonVisualizer;
+        private readonly Visualization visualization;
         private bool userIsDraggingSlider = false;
         public bool WindowClosing = false;
-        private readonly DispatcherTimer timer = new DispatcherTimer();
+        private readonly DispatcherTimer audioTimer = new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += timerTick;
-            timer.Start();
+            visualization = new Visualization(canvas);
+            audioTimer.Interval = TimeSpan.FromSeconds(1);
+            audioTimer.Tick += timerAudioTick;
+            audioTimer.Start();
             player.MaximumCalculated += OnMaximumCalculated;
-            polygonVisualizer = new Visualization(canvas);
-            canvas.SizeChanged += polygonVisualizer.WaveFormControl_SizeChanged;
+            canvas.SizeChanged += visualization.WaveFormControl_SizeChanged;
         }
-        private void timerTick(object sender, EventArgs e)
+        private void updateSlider()
+        {
+            sliProgress.Minimum = 0;
+            sliProgress.Maximum = player.GetAudioTotalSeconds();
+            sliProgress.Value = player.GetAudioCurrentValueSeconds();
+        }
+        private void timerAudioTick(object sender, EventArgs e)
         {
             if (player.CheckDidDeviceCreated() && player.CheckAudioStream() && !userIsDraggingSlider)
             {
-                sliProgress.Minimum = 0;
-                sliProgress.Maximum = player.GetAudioTotalSeconds();
-                sliProgress.Value = player.GetAudioCurrentValueSeconds();
+                updateSlider();
             }
         }
         private void btnOpenFilesClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Audio (*.mp3,*.wav,*aiff)|*.mp3;*.wav;*.aiff|All Files (*.*)|*.*";
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            if (openFileDialog.ShowDialog() == true)
+            openFileDialog.Filter = "Audio (*.mp3,*.wav,*aiff)|*.mp3;*.wav;*.aiff";
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+
                 audioQueue.UpdatePaths(openFileDialog.FileNames);
                 lbFiles.BeginInit();
                 foreach (string filename in openFileDialog.FileNames)
@@ -61,22 +61,26 @@ namespace AudioProject
                     lbFiles.Items.Add(Path.GetFileName(filename));
                 }
                 lbFiles.EndInit();
-                player.Load(audioQueue.GetNextAudio());
+                player.Load(audioQueue.GetCurrentAudio());
             }
         }
         private void OnMaximumCalculated(object sender, MaxSampleEventArgs e)
         {
-            polygonVisualizer.AddValue(e.MaxSample, e.MinSample);
+            visualization.AddValue(e.MaxSample, e.MinSample);
         }
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
+            if (audioQueue.GetQueueLength() <= 0)
+            {
+                return;
+            }
             if (PlayButton.Content == FindResource("Play"))
             {
-                if (timer.IsEnabled == false)
+                if (audioTimer.IsEnabled == false)
                 {
-                    timer.Start();
+                    audioTimer.Start();
                 }
-                if (audioQueue.GetNextAudio() == String.Empty)
+                if (audioQueue.GetCurrentAudio() == String.Empty)
                 {
                     PlayButton.Content = FindResource("Stop");
                     return;
@@ -89,13 +93,16 @@ namespace AudioProject
                     }
                     catch (FileNotFoundException ex)
                     {
-                        MessageBox.Show("File not found", "Error");
+                        System.Windows.Forms.MessageBox.Show("File not found", "Error");
                         throw ex;
                     }
                 }
                 if (player.CheckAudioStream() && player.CheckDidDeviceCreated())
                 {
                     player.Play();
+                    String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+                    String text = "Current playing : " + file;
+                    currentPlaying.Text = text;
                     PlayButton.Content = FindResource("Stop");
                 }
             }
@@ -105,12 +112,14 @@ namespace AudioProject
                 if (player.CheckDidDeviceCreated() && player.CheckAudioStream())
                 {
                     player.Pause();
-                    timer.Stop();
+                    audioTimer.Stop();
+                    currentPlaying.Text = String.Empty;
                 }
                 if (!player.CheckDidDeviceCreated() || !player.CheckAudioStream())
                 {
                     player.Stop();
-                    timer.Stop();
+                    audioTimer.Stop();
+                    currentPlaying.Text = String.Empty;
                 }
             }
         }
@@ -152,10 +161,14 @@ namespace AudioProject
         {
             if (player.CheckDidDeviceCreated() && player.CheckAudioStream() && player.GetAudioPosition() != 0)
             {
+                player.Stop();
                 player.SetAudioPosition(0);
+                updateSlider();
+                lblProgressStatus.Text = TimeSpan.FromSeconds(sliProgress.Value).ToString(@"hh\:mm\:ss");
             }
-            if (audioQueue.GetNextAudio() != String.Empty)
+            if (audioQueue.GetCurrentAudio() != String.Empty)
             {
+                visualization.Reset();
                 player.Play();
                 if (PlayButton.Content == FindResource("Play"))
                 {
@@ -163,44 +176,55 @@ namespace AudioProject
                 }
             }
         }
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private void NextClick(object sender, RoutedEventArgs e)
         {
             player.Stop();
-            audioQueue.IncreaseQueueIndex();
             player.Load(audioQueue.GetNextAudio());
             player.Play();
+            String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+            String text = "Current playing : " + file;
+            currentPlaying.Text = text;
+            visualization.Reset();
             if (PlayButton.Content == FindResource("Play"))
             {
                 PlayButton.Content = FindResource("Stop");
             }
         }
-        private void Prev_Click(object sender, RoutedEventArgs e)
+        private void PrevClick(object sender, RoutedEventArgs e)
         {
             player.Stop();
-            audioQueue.DecreaseQueueIndex();
-            player.Load(audioQueue.GetNextAudio());
+            player.Load(audioQueue.GetPrevAudio());
             player.Play();
+            String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+            String text = "Current playing : " + file;
+            currentPlaying.Text = text;
+            visualization.Reset();
+            if (PlayButton.Content == FindResource("Play"))
+            {
+                PlayButton.Content = FindResource("Stop");
+            }
         }
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            SettingsWindow settingsWindow = new SettingsWindow();
+            SettingsWindow settingsWindow = new SettingsWindow(player);
+            settingsWindow.Owner = this;
             settingsWindow.Show();
         }
-        void lbFiles_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void lbFilesMouseDoubleClick(object sender, RoutedEventArgs e)
         {
             if (lbFiles.SelectedItem != null)
             {
                 player.Stop();
                 audioQueue.SetQueueIndex(lbFiles.SelectedIndex);
-                player.Load(audioQueue.GetNextAudio());
+                player.Load(audioQueue.GetCurrentAudio());
+                String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+                String text = "Current playing : " + file;
+                currentPlaying.Text = text;
+                visualization.Reset();
                 player.Play();
                 if (PlayButton.Content == FindResource("Play"))
                 {
                     PlayButton.Content = FindResource("Stop");
-                }
-                else
-                {
-                    PlayButton.Content = FindResource("Play");
                 }
             }
         }

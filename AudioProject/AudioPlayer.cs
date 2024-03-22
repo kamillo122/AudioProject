@@ -13,7 +13,7 @@ namespace AudioProject
 {
     public class AudioPlayer : IDisposable
     {
-        private WaveOutEvent outputDevice;
+        private WaveOut outputDevice;
         private AudioFileReader audioFileReader;
 
         public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
@@ -72,6 +72,17 @@ namespace AudioProject
                 CreateDevice();
             }
         }
+        public void RecreateDevice(int deviceNumber)
+        {
+            if (outputDevice != null)
+            {
+                outputDevice.Stop();
+                outputDevice.Dispose();
+                outputDevice = null;
+                outputDevice = new WaveOut() { DesiredLatency = 200, DeviceNumber = deviceNumber };
+            }
+
+        }
         public void SetVolume(float volume)
         {
             if (outputDevice == null)
@@ -90,7 +101,7 @@ namespace AudioProject
         }
         private void CreateDevice()
         {
-            outputDevice = new WaveOutEvent { DesiredLatency = 200 };
+            outputDevice = new WaveOut { DesiredLatency = 200 };
         }
         public bool CheckDidDeviceCreated()
         {

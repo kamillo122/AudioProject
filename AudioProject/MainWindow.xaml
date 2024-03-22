@@ -37,10 +37,10 @@
         <Button Name="PlayButton" Grid.Column="4" Grid.Row="2" Click="PlayButtonClick" Margin="0,29,0,0" Grid.RowSpan="2">
             <DynamicResource ResourceKey="Play"/>
         </Button>
-        <Button Grid.Column="2" Grid.Row="2" Click="Prev_Click" Grid.ColumnSpan="2" Margin="195,29,0,0" Grid.RowSpan="2">
+        <Button Grid.Column="2" Grid.Row="2" Click="PrevClick" Grid.ColumnSpan="2" Margin="195,29,0,0" Grid.RowSpan="2">
             <DynamicResource ResourceKey="Left"/>
         </Button>
-        <Button Grid.Column="6" Grid.Row="2" Click="Next_Click" Margin="0,29,0,0" Grid.RowSpan="2">
+        <Button Grid.Column="6" Grid.Row="2" Click="NextClick" Margin="0,29,0,0" Grid.RowSpan="2">
             <DynamicResource ResourceKey="Right"/>
         </Button>
         <Button Grid.Column="5" Grid.Row="2" Click="AgainButtonClick" Margin="0,29,0,0" Grid.RowSpan="2">
@@ -59,11 +59,12 @@
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
                 <Button Name="btnOpenFile" Click="btnOpenFilesClick">Open files</Button>
             </WrapPanel>
-            <ListBox Background="Black" Foreground="WhiteSmoke" Name="lbFiles" MouseDoubleClick="lbFiles_MouseDoubleClick"/>
+            <ListBox Background="Black" Foreground="WhiteSmoke" Name="lbFiles" MouseDoubleClick="lbFilesMouseDoubleClick"/>
         </DockPanel>
-        <Button x:Name="SettingsButton" Grid.Column="6" Grid.Row="0" Margin="6,6,6,6" Click="SettingsButton_Click">
+        <Button x:Name="SettingsButton" Grid.Column="6" Grid.Row="0" Margin="6,6,6,6" Click="SettingsButtonClick">
             <DynamicResource ResourceKey="Settings"/>
         </Button>
         <Canvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="5" Margin="0"/>
+        <TextBlock x:Name="currentPlaying" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
     </Grid>
 </Window>

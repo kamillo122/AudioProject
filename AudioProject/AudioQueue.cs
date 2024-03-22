@@ -14,17 +14,25 @@ namespace AudioProject
         {
             AudioPaths = paths.ToList();
         }
-        public void IncreaseQueueIndex()
+        public int GetQueueLength()
         {
-            QueueIndex++;
-        }
-        public void DecreaseQueueIndex()
-        {
-            QueueIndex--;
+            return AudioPaths.Count;
         }
         public void SetQueueIndex(int index)
         {
+            if (AudioPaths.Count == 0)
+            {
+                return;
+            }
+            if (index >= AudioPaths.Count || QueueIndex < 0)
+            {
+                return;
+            }
             QueueIndex = index;
+        }
+        public string GetCurrentAudio()
+        {
+            return AudioPaths[QueueIndex];
         }
         public string GetNextAudio()
         {
@@ -35,12 +43,23 @@ namespace AudioProject
             if (QueueIndex >= AudioPaths.Count || QueueIndex < 0)
             {
                 QueueIndex = 0;
+                return AudioPaths[QueueIndex];
+            }
+            QueueIndex++;
+            return AudioPaths[QueueIndex];
+        }
+        public string GetPrevAudio()
+        {
+            if (AudioPaths.Count == 0)
+            {
                 return String.Empty;
             }
-            if (AudioPaths.Count == 1)
+            if (QueueIndex >= AudioPaths.Count || QueueIndex < 0)
             {
-                return AudioPaths[0];
+                QueueIndex = 0;
+                return AudioPaths[QueueIndex];
             }
+            QueueIndex--;
             return AudioPaths[QueueIndex];
         }
         public string GetRandomAudio()

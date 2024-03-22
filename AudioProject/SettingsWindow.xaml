@@ -9,7 +9,7 @@
         Foreground="WhiteSmoke"
         FontFamily="Calibri"
         Icon="./Images/settings.png"
-        Title="Settings" Height="450" Width="800">
+        Title="Settings" Height="450" Width="800" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -47,6 +47,6 @@
         </Rectangle>
         <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="2" Content="Appearance" Foreground="WhiteSmoke" FontSize="20"></Label>
         <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1" Content="Audio Device" Foreground="WhiteSmoke" FontSize="16"></Label>
-        <ComboBox Name="AudioDeviceComboBox" Grid.Row="2" Grid.Column="1" Margin="5,5,5,5"></ComboBox>
+        <ComboBox Name="AudioDeviceComboBox" Grid.Row="2" Grid.Column="1" Margin="5,5,5,5" ></ComboBox>
     </Grid>
 </Window>

@@ -19,10 +19,24 @@ namespace AudioProject
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        public SettingsWindow()
+        private readonly AudioPlayer Player;
+        public SettingsWindow(AudioPlayer player)
         {
             InitializeComponent();
+            //AudioDeviceComboBox.SelectionChanged += OnSelectionChanged;
+            AudioDeviceComboBox.DropDownClosed += OnSelectionChanged;
             Loaded += OnSettingsLoaded;
+            Player = player;
+        }
+        private void OnSelectionChanged(object sender, EventArgs e)
+        {
+            if (AudioDeviceComboBox.SelectedItem != null && AudioDeviceComboBox.SelectedIndex != -1)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Player.RecreateDevice(AudioDeviceComboBox.SelectedIndex);
+                });
+            }
         }
         public void OnSettingsLoaded(object sender, RoutedEventArgs e)
         {
