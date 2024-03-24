@@ -31,7 +31,7 @@ namespace AudioProject
             audioTimer.Tick += timerAudioTick;
             audioTimer.Start();
             player.MaximumCalculated += OnMaximumCalculated;
-            canvas.SizeChanged += visualization.WaveFormControl_SizeChanged;
+            canvas.SizeChanged += visualization.WaveFormControlSizeChanged;
         }
         private void updateSlider()
         {

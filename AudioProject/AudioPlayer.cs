@@ -1,12 +1,7 @@
-﻿using NAudio.Wave;
-using NAudio.Extras;
+﻿using NAudio.Extras;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Pipes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace AudioProject
@@ -74,14 +69,10 @@ namespace AudioProject
         }
         public void RecreateDevice(int deviceNumber)
         {
-            if (outputDevice != null)
-            {
-                outputDevice.Stop();
-                outputDevice.Dispose();
-                outputDevice = null;
-                outputDevice = new WaveOut() { DesiredLatency = 200, DeviceNumber = deviceNumber };
-            }
-
+            outputDevice.Stop();
+            outputDevice.Dispose();
+            outputDevice = null;
+            outputDevice = new WaveOut() { DesiredLatency = 200, DeviceNumber = deviceNumber };
         }
         public void SetVolume(float volume)
         {

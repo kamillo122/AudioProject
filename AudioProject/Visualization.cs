@@ -8,7 +8,7 @@ namespace AudioProject
     /// <summary>
     /// Interaction logic for PolygonWaveFormControl.xaml
     /// </summary>
-    public class Visualization : Canvas, IWaveFormRenderer
+    public class Visualization : IWaveFormRenderer
     {
         double yTranslate = 20;
         double yScale = 20;
@@ -20,14 +20,14 @@ namespace AudioProject
         public Visualization(Canvas canvas)
         {
             mainCanvas = canvas;
-            topLine.Stroke = Brushes.WhiteSmoke;
-            bottomLine.Stroke = Brushes.WhiteSmoke;
+            topLine.Stroke = Brushes.GreenYellow;
+            bottomLine.Stroke = Brushes.GreenYellow;
             topLine.StrokeThickness = 1;
             bottomLine.StrokeThickness = 1;
             mainCanvas.Children.Add(topLine);
             mainCanvas.Children.Add(bottomLine);
         }
-        public void WaveFormControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        public void WaveFormControlSizeChanged(object sender, SizeChangedEventArgs e)
         {
             Reset();
             yTranslate = mainCanvas.ActualHeight / 2;
