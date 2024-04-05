@@ -20,7 +20,6 @@ namespace AudioProject
             EnsureDeviceCreated();
             OpenFile(fileName);
         }
-
         public static List<string> GetAudioDevices()
         {
             List<string> devices = new List<string>();

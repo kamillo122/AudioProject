@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioProject"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Background="Black"
-        Foreground="WhiteSmoke"
+        Background="{DynamicResource WindowBackgroudBrush}"
+        Foreground="{DynamicResource WindowForegroundBrush}"
         FontFamily="Calibri"
         Icon="./Images/settings.png"
         Title="Settings" Height="450" Width="800" WindowStartupLocation="CenterOwner">
@@ -15,26 +16,19 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="0.7*"/>
             <RowDefinition Height="0.7*"/>
-            <RowDefinition Height="6*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Content="Queue" Foreground="WhiteSmoke" FontSize="20"></Label>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Fill="WhiteSmoke" Height="3">
-            <Rectangle.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="90"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Rectangle.RenderTransform>
-        </Rectangle>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Content="Audio" Foreground="WhiteSmoke" FontSize="20"></Label>
+        <Label Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Content="Queue" Foreground="WhiteSmoke" FontSize="20"></Label>
         <Rectangle Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Fill="WhiteSmoke" Height="3">
             <Rectangle.RenderTransform>
                 <TransformGroup>
@@ -45,8 +39,30 @@
                 </TransformGroup>
             </Rectangle.RenderTransform>
         </Rectangle>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="2" Content="Appearance" Foreground="WhiteSmoke" FontSize="20"></Label>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1" Content="Audio Device" Foreground="WhiteSmoke" FontSize="16"></Label>
-        <ComboBox Name="AudioDeviceComboBox" Grid.Row="2" Grid.Column="1" Margin="5,5,5,5" ></ComboBox>
+        <Label Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center" Content="Audio" Foreground="WhiteSmoke" FontSize="20"></Label>
+        <Rectangle Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Top" Fill="WhiteSmoke" Height="3">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Content="Appearance" Foreground="WhiteSmoke" FontSize="20"></Label>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1" Content="Audio Device" Foreground="WhiteSmoke" FontSize="16"></Label>
+        <ComboBox Name="AudioDeviceComboBox" Grid.Row="2" Grid.Column="2" Margin="5,5,5,5" ></ComboBox>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="1" Content="Background Color" Foreground="WhiteSmoke" FontSize="16"></Label>
+        <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="2" Grid.Column="3" Name="ClrPickerBackground" SelectedColorChanged="ClrPickerBackgroundSelectedColorChanged" ></xctk:ColorPicker>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="3" Content="Foreground Color" Foreground="WhiteSmoke" FontSize="16"></Label>
+        <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="4" Grid.Column="3" Name="ClrPickerForeground" SelectedColorChanged="ClrPickerForegroundSelectedColorChanged" ></xctk:ColorPicker>
+        <TextBlock VerticalAlignment="Center" Grid.Row="7" Grid.Column="0" FontSize="18" Foreground="WhiteSmoke" Text="Equalizer">
+            <TextBlock.LayoutTransform>
+                <RotateTransform Angle="-90" />
+            </TextBlock.LayoutTransform>
+        </TextBlock>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="5" Content="Wave Form Color" Foreground="WhiteSmoke" FontSize="16"></Label>
+        <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="6" Grid.Column="3" Name="ClrPickerWaveForm" SelectedColorChanged="ClrPickerWaveFormSelectedColorChanged" ></xctk:ColorPicker>
     </Grid>
 </Window>

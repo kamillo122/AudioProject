@@ -24,6 +24,7 @@ namespace AudioProject
         {
             InitializeComponent();
             //AudioDeviceComboBox.SelectionChanged += OnSelectionChanged;
+            ClrPickerBackground.SelectedColor = Colors.Black;
             AudioDeviceComboBox.DropDownClosed += OnSelectionChanged;
             Loaded += OnSettingsLoaded;
             Player = player;
@@ -50,6 +51,18 @@ namespace AudioProject
                 }
                 AudioDeviceComboBox.SelectedIndex = 0;
             }
+        }
+        private void ClrPickerBackgroundSelectedColorChanged(object sender, EventArgs e)
+        {
+            Application.Current.Resources["WindowBackgroudBrush"] = new SolidColorBrush(ClrPickerBackground.SelectedColor.Value);
+        }
+        private void ClrPickerForegroundSelectedColorChanged(object sender, EventArgs e)
+        {
+            Application.Current.Resources["WindowForegroundBrush"] = new SolidColorBrush(ClrPickerForeground.SelectedColor.Value);
+        }
+        private void ClrPickerWaveFormSelectedColorChanged(object sender, EventArgs e)
+        {
+            Application.Current.Resources["WaveFormBackgroundBrush"] = new SolidColorBrush(ClrPickerWaveForm.SelectedColor.Value);
         }
     }
 }

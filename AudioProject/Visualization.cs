@@ -20,8 +20,8 @@ namespace AudioProject
         public Visualization(Canvas canvas)
         {
             mainCanvas = canvas;
-            topLine.Stroke = Brushes.GreenYellow;
-            bottomLine.Stroke = Brushes.GreenYellow;
+            topLine.Stroke = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
+            bottomLine.Stroke = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
             topLine.StrokeThickness = 1;
             bottomLine.StrokeThickness = 1;
             mainCanvas.Children.Add(topLine);

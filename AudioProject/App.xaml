@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:AudioProject"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="WindowBackgroudBrush"
+                   Color="Black" />
+        <SolidColorBrush x:Key="WindowForegroundBrush"
+            />
+        <SolidColorBrush x:Key="WaveFormBackgroundBrush" Color="LimeGreen"/>
     </Application.Resources>
 </Application>
