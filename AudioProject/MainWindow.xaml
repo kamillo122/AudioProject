@@ -59,7 +59,7 @@
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
                 <Button Name="btnOpenFile" Click="btnOpenFilesClick">Open files</Button>
             </WrapPanel>
-            <ListBox Background="Black" Foreground="WhiteSmoke" Name="lbFiles" MouseDoubleClick="lbFilesMouseDoubleClick"/>
+            <ListBox Background="{DynamicResource WindowBackgroudBrush}" Foreground="{DynamicResource WindowForegroundBrush}" Name="lbFiles" MouseDoubleClick="lbFilesMouseDoubleClick"/>
         </DockPanel>
         <Button x:Name="SettingsButton" Grid.Column="6" Grid.Row="0" Margin="6,6,6,6" Click="SettingsButtonClick">
             <DynamicResource ResourceKey="Settings"/>

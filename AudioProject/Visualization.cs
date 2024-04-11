@@ -5,9 +5,6 @@ using System.Windows.Shapes;
 
 namespace AudioProject
 {
-    /// <summary>
-    /// Interaction logic for PolygonWaveFormControl.xaml
-    /// </summary>
     public class Visualization : IWaveFormRenderer
     {
         double yTranslate = 20;
@@ -16,16 +13,27 @@ namespace AudioProject
         readonly Polyline topLine = new Polyline();
         readonly Polyline bottomLine = new Polyline();
         private readonly Canvas mainCanvas;
-
+        public Brush WaveFormColor
+        {
+            get => topLine.Stroke;
+            set
+            {
+                topLine.Stroke = value;
+                bottomLine.Stroke = value;
+            }
+        }
         public Visualization(Canvas canvas)
         {
             mainCanvas = canvas;
-            topLine.Stroke = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
-            bottomLine.Stroke = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
+            WaveFormColor = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
             topLine.StrokeThickness = 1;
             bottomLine.StrokeThickness = 1;
             mainCanvas.Children.Add(topLine);
             mainCanvas.Children.Add(bottomLine);
+        }
+        public void UpdateWaveFormColor() 
+        {
+            WaveFormColor = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
         }
         public void WaveFormControlSizeChanged(object sender, SizeChangedEventArgs e)
         {

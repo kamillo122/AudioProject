@@ -7,6 +7,7 @@
         <SolidColorBrush x:Key="WindowBackgroudBrush"
                    Color="Black" />
         <SolidColorBrush x:Key="WindowForegroundBrush"
+                         Color="Black"
             />
         <SolidColorBrush x:Key="WaveFormBackgroundBrush" Color="LimeGreen"/>
     </Application.Resources>

@@ -64,5 +64,32 @@
         </TextBlock>
         <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="5" Content="Wave Form Color" Foreground="WhiteSmoke" FontSize="16"></Label>
         <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="6" Grid.Column="3" Name="ClrPickerWaveForm" SelectedColorChanged="ClrPickerWaveFormSelectedColorChanged" ></xctk:ColorPicker>
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band1Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band2Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band3Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band4Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band5Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band6Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band7Changed"></Slider>
+            <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band8Changed"></Slider>
+        </StackPanel>
+        <Canvas x:Name="EqualizerCanvas" Grid.Column="2" Grid.Row="7">
+            <Canvas.Background>
+                <DrawingBrush TileMode="Tile" Viewport="-10,-10,40,40" 
+                                     ViewportUnits="Absolute">
+                    <DrawingBrush.Drawing>
+                        <GeometryDrawing>
+                            <GeometryDrawing.Geometry>
+                                <RectangleGeometry Rect="0,0,25,25"/>
+                            </GeometryDrawing.Geometry>
+                            <GeometryDrawing.Pen>
+                                <Pen Brush="WhiteSmoke" Thickness="0.5"/>
+                            </GeometryDrawing.Pen>
+                        </GeometryDrawing>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Canvas.Background>
+        </Canvas>
     </Grid>
 </Window>

@@ -206,7 +206,7 @@ namespace AudioProject
         }
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            SettingsWindow settingsWindow = new SettingsWindow(player);
+            SettingsWindow settingsWindow = new SettingsWindow(player, visualization);
             settingsWindow.Owner = this;
             settingsWindow.Show();
         }

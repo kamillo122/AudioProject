@@ -10,9 +10,117 @@ namespace AudioProject
     {
         private WaveOut outputDevice;
         private AudioFileReader audioFileReader;
+        private Equalizer equalizer;
+        private readonly EqualizerBand[] bands;
 
         public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
 
+        public AudioPlayer()
+        {
+            bands = new EqualizerBand[]
+                    {
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 100, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 200, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 400, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 800, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1200, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2400, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 9600, Gain = 0},
+                    };
+        }
+        public void UpdateEqualizer()
+        {
+            equalizer?.Update();
+        }
+        public float Band1
+        {
+            get => bands[0].Gain;
+            set
+            {
+                if (bands[0].Gain != value)
+                {
+                    bands[0].Gain = value;
+                }
+            }
+        }
+        public float Band2
+        {
+            get => bands[1].Gain;
+            set
+            {
+                if (bands[1].Gain != value)
+                {
+                    bands[1].Gain = value;
+                }
+            }
+        }
+        public float Band3
+        {
+            get => bands[2].Gain;
+            set
+            {
+                if (bands[2].Gain != value)
+                {
+                    bands[2].Gain = value;
+                }
+            }
+        }
+        public float Band4
+        {
+            get => bands[3].Gain;
+            set
+            {
+                if (bands[3].Gain != value)
+                {
+                    bands[3].Gain = value;
+                }
+            }
+        }
+        public float Band5
+        {
+            get => bands[4].Gain;
+            set
+            {
+                if (bands[4].Gain != value)
+                {
+                    bands[4].Gain = value;
+                }
+            }
+        }
+        public float Band6
+        {
+            get => bands[5].Gain;
+            set
+            {
+                if (bands[5].Gain != value)
+                {
+                    bands[5].Gain = value;
+                }
+            }
+        }
+        public float Band7
+        {
+            get => bands[6].Gain;
+            set
+            {
+                if (bands[6].Gain != value)
+                {
+                    bands[6].Gain = value;
+                }
+            }
+        }
+        public float Band8
+        {
+            get => bands[7].Gain;
+            set
+            {
+                if (bands[7].Gain != value)
+                {
+                    bands[7].Gain = value;
+                }
+            }
+        }
         public void Load(string fileName)
         {
             Stop();
@@ -51,7 +159,8 @@ namespace AudioProject
                 var aggregator = new SampleAggregator(inputStream);
                 aggregator.NotificationCount = inputStream.WaveFormat.SampleRate / 100;
                 aggregator.MaximumCalculated += (s, a) => MaximumCalculated?.Invoke(this, a);
-                outputDevice.Init(aggregator);
+                equalizer = new Equalizer(aggregator, bands);
+                outputDevice.Init(equalizer);
             }
             catch (Exception e)
             {

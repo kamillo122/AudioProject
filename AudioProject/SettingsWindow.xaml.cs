@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace AudioProject
@@ -20,7 +12,9 @@ namespace AudioProject
     public partial class SettingsWindow : Window
     {
         private readonly AudioPlayer Player;
-        public SettingsWindow(AudioPlayer player)
+        private readonly Visualization Visualization;
+        private Path EqualizerPath = new Path();
+        public SettingsWindow(AudioPlayer player, Visualization visualization)
         {
             InitializeComponent();
             //AudioDeviceComboBox.SelectionChanged += OnSelectionChanged;
@@ -28,6 +22,11 @@ namespace AudioProject
             AudioDeviceComboBox.DropDownClosed += OnSelectionChanged;
             Loaded += OnSettingsLoaded;
             Player = player;
+            Visualization = visualization;
+            EqualizerCanvas.Children.Add(EqualizerPath);
+            EqualizerPath.Stroke = Brushes.AliceBlue;
+            EqualizerPath.StrokeThickness = 2;
+            DrawEqualizerCurve();
         }
         private void OnSelectionChanged(object sender, EventArgs e)
         {
@@ -63,6 +62,92 @@ namespace AudioProject
         private void ClrPickerWaveFormSelectedColorChanged(object sender, EventArgs e)
         {
             Application.Current.Resources["WaveFormBackgroundBrush"] = new SolidColorBrush(ClrPickerWaveForm.SelectedColor.Value);
+            Visualization.UpdateWaveFormColor();
+        }
+        private void DrawEqualizerCurve()
+        {
+            /*
+            PathFigure myPathFigure = new PathFigure();
+            // Calculate the center of the canvas
+            double centerX = EqualizerCanvas.ActualWidth / 2;
+            double centerY = EqualizerCanvas.ActualHeight / 2;
+
+            myPathFigure.StartPoint = new Point(0, centerY);
+
+            PointCollection myPointCollection = new PointCollection(8);
+            myPointCollection.Add(new Point(centerX + 100, centerY - Player.Band1));
+            myPointCollection.Add(new Point(centerX + 125, centerY - Player.Band2));
+            myPointCollection.Add(new Point(centerX + 150, centerY - Player.Band3));
+            myPointCollection.Add(new Point(centerX + 175, centerY - Player.Band4));
+            myPointCollection.Add(new Point(centerX + 200, centerY - Player.Band5));
+            myPointCollection.Add(new Point(centerX + 225, centerY - Player.Band6));
+            myPointCollection.Add(new Point(centerX + 250, centerY - Player.Band7));
+            myPointCollection.Add(new Point(centerX + 275, centerY - Player.Band8));
+
+            PolyBezierSegment myBezierSegment = new PolyBezierSegment();
+            myBezierSegment.Points = myPointCollection;
+
+            PathSegmentCollection myPathSegmentCollection = new PathSegmentCollection();
+            myPathSegmentCollection.Add(myBezierSegment);
+
+            myPathFigure.Segments = myPathSegmentCollection;
+
+            PathFigureCollection myPathFigureCollection = new PathFigureCollection();
+            myPathFigureCollection.Add(myPathFigure);
+
+            PathGeometry myPathGeometry = new PathGeometry();
+            myPathGeometry.Figures = myPathFigureCollection;
+
+            EqualizerPath.Data = myPathGeometry;
+            */
+        }
+        private void Band1Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band1 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band2Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band2 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band3Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band3 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band4Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band4 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band5Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band5 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band6Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band6 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band7Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band7 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
+        }
+        private void Band8Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Player.Band8 = (float)e.NewValue;
+            Player.UpdateEqualizer();
+            DrawEqualizerCurve();
         }
     }
 }
