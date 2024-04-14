@@ -16,6 +16,7 @@ namespace AudioProject
         {
             return AudioPaths.Count;
         }
+        public List<string> GetAudioPaths() {  return AudioPaths; }
         public void SetQueueIndex(int index)
         {
             if (AudioPaths.Count == 0)

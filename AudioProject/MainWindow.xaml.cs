@@ -61,7 +61,10 @@ namespace AudioProject
                     lbFiles.Items.Add(Path.GetFileName(filename));
                 }
                 lbFiles.EndInit();
-                player.Load(audioQueue.GetCurrentAudio());
+                if (!player.CheckAudioStream() && !player.CheckDidDeviceCreated())
+                {
+                    player.Load(audioQueue.GetCurrentAudio());
+                }
             }
         }
         private void OnMaximumCalculated(object sender, MaxSampleEventArgs e)
@@ -206,9 +209,18 @@ namespace AudioProject
         }
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            SettingsWindow settingsWindow = new SettingsWindow(player, visualization);
+            SettingsWindow settingsWindow = new SettingsWindow(player, visualization, audioQueue);
             settingsWindow.Owner = this;
             settingsWindow.Show();
+        }
+        public void UpdatePaths()
+        {
+            lbFiles.BeginInit();
+            foreach (string filename in audioQueue.GetAudioPaths())
+            {
+                lbFiles.Items.Add(Path.GetFileName(filename));
+            }
+            lbFiles.EndInit();
         }
         private void lbFilesMouseDoubleClick(object sender, RoutedEventArgs e)
         {
