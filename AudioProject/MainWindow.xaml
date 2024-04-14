@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:AudioProject"
         mc:Ignorable="d"
         Background="{DynamicResource WindowBackgroudBrush}"
-        Foreground="{DynamicResource WindowForegroundBrush}"
         FontFamily="Calibri"
         Icon="./Images/music.png"
         Title="AudioPlayer" Height="450" Width="800">
@@ -65,6 +64,6 @@
             <DynamicResource ResourceKey="Settings"/>
         </Button>
         <Canvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="5" Margin="0"/>
-        <TextBlock x:Name="currentPlaying" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+        <TextBlock x:Name="currentPlaying" Foreground="{DynamicResource WindowForegroundBrush}" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
     </Grid>
 </Window>

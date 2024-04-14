@@ -180,7 +180,6 @@
     <Resource Include="Images\play-again.png" />
     <Resource Include="Images\settings.png" />
     <Resource Include="Images\music.png" />
-    <Content Include="Kinny.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

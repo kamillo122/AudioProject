@@ -17,7 +17,6 @@ namespace AudioProject
         public SettingsWindow(AudioPlayer player, Visualization visualization)
         {
             InitializeComponent();
-            //AudioDeviceComboBox.SelectionChanged += OnSelectionChanged;
             ClrPickerBackground.SelectedColor = Colors.Black;
             AudioDeviceComboBox.DropDownClosed += OnSelectionChanged;
             Loaded += OnSettingsLoaded;
@@ -66,40 +65,7 @@ namespace AudioProject
         }
         private void DrawEqualizerCurve()
         {
-            /*
-            PathFigure myPathFigure = new PathFigure();
-            // Calculate the center of the canvas
-            double centerX = EqualizerCanvas.ActualWidth / 2;
-            double centerY = EqualizerCanvas.ActualHeight / 2;
-
-            myPathFigure.StartPoint = new Point(0, centerY);
-
-            PointCollection myPointCollection = new PointCollection(8);
-            myPointCollection.Add(new Point(centerX + 100, centerY - Player.Band1));
-            myPointCollection.Add(new Point(centerX + 125, centerY - Player.Band2));
-            myPointCollection.Add(new Point(centerX + 150, centerY - Player.Band3));
-            myPointCollection.Add(new Point(centerX + 175, centerY - Player.Band4));
-            myPointCollection.Add(new Point(centerX + 200, centerY - Player.Band5));
-            myPointCollection.Add(new Point(centerX + 225, centerY - Player.Band6));
-            myPointCollection.Add(new Point(centerX + 250, centerY - Player.Band7));
-            myPointCollection.Add(new Point(centerX + 275, centerY - Player.Band8));
-
-            PolyBezierSegment myBezierSegment = new PolyBezierSegment();
-            myBezierSegment.Points = myPointCollection;
-
-            PathSegmentCollection myPathSegmentCollection = new PathSegmentCollection();
-            myPathSegmentCollection.Add(myBezierSegment);
-
-            myPathFigure.Segments = myPathSegmentCollection;
-
-            PathFigureCollection myPathFigureCollection = new PathFigureCollection();
-            myPathFigureCollection.Add(myPathFigure);
-
-            PathGeometry myPathGeometry = new PathGeometry();
-            myPathGeometry.Figures = myPathFigureCollection;
-
-            EqualizerPath.Data = myPathGeometry;
-            */
+          //TODO
         }
         private void Band1Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
