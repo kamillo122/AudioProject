@@ -52,17 +52,17 @@
         <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Content="Appearance" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="20"></Label>
         <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1" Content="Audio Device" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="16"></Label>
         <ComboBox Name="AudioDeviceComboBox" Grid.Row="2" Grid.Column="2" Margin="5,5,5,5" ></ComboBox>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="1" Content="Background Color" Foreground="WhiteSmoke" FontSize="16"></Label>
-        <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="2" Grid.Column="3" Name="ClrPickerBackground" SelectedColorChanged="ClrPickerBackgroundSelectedColorChanged" ></xctk:ColorPicker>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="3" Content="Foreground Color" Foreground="WhiteSmoke" FontSize="16"></Label>
-        <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="4" Grid.Column="3" Name="ClrPickerForeground" SelectedColorChanged="ClrPickerForegroundSelectedColorChanged" ></xctk:ColorPicker>
-        <TextBlock VerticalAlignment="Center" Grid.Row="7" Grid.Column="0" FontSize="18" Foreground="WhiteSmoke" Text="Equalizer">
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="1" Content="Background Color" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="16"></Label>
+        <xctk:ColorPicker Margin="5,5,5,5" TabForeground="Black" DisplayColorAndName="True" Grid.Row="2" Grid.Column="3" Name="ClrPickerBackground" SelectedColorChanged="ClrPickerBackgroundSelectedColorChanged" ></xctk:ColorPicker>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="3" Content="Foreground Color" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="16"></Label>
+        <xctk:ColorPicker Margin="5,5,5,5" TabForeground="Black" DisplayColorAndName="True" Grid.Row="4" Grid.Column="3" Name="ClrPickerForeground" SelectedColorChanged="ClrPickerForegroundSelectedColorChanged" ></xctk:ColorPicker>
+        <TextBlock VerticalAlignment="Center" Grid.Row="7" Grid.Column="0" FontSize="18" Foreground="{DynamicResource WindowForegroundBrush}" Text="Equalizer">
             <TextBlock.LayoutTransform>
                 <RotateTransform Angle="-90" />
             </TextBlock.LayoutTransform>
         </TextBlock>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="5" Content="Wave Form Color" Foreground="WhiteSmoke" FontSize="16"></Label>
-        <xctk:ColorPicker TabForeground="Black" DisplayColorAndName="True" Grid.Row="6" Grid.Column="3" Name="ClrPickerWaveForm" SelectedColorChanged="ClrPickerWaveFormSelectedColorChanged" ></xctk:ColorPicker>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="3" Grid.Row="5" Content="Wave Form Color" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="16"></Label>
+        <xctk:ColorPicker Margin="5,5,5,5" TabForeground="Black" DisplayColorAndName="True" Grid.Row="6" Grid.Column="3" Name="ClrPickerWaveForm" SelectedColorChanged="ClrPickerWaveFormSelectedColorChanged" ></xctk:ColorPicker>
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
             <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band1Changed"></Slider>
             <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band2Changed"></Slider>
@@ -73,22 +73,9 @@
             <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band7Changed"></Slider>
             <Slider Orientation="Vertical" Margin="8" Minimum="-30" Maximum="30" ValueChanged="Band8Changed"></Slider>
         </StackPanel>
-        <Canvas x:Name="EqualizerCanvas" Grid.Column="2" Grid.Row="7">
-            <Canvas.Background>
-                <DrawingBrush TileMode="Tile" Viewport="-10,-10,40,40" 
-                                     ViewportUnits="Absolute">
-                    <DrawingBrush.Drawing>
-                        <GeometryDrawing>
-                            <GeometryDrawing.Geometry>
-                                <RectangleGeometry Rect="0,0,25,25"/>
-                            </GeometryDrawing.Geometry>
-                            <GeometryDrawing.Pen>
-                                <Pen Brush="WhiteSmoke" Thickness="0.5"/>
-                            </GeometryDrawing.Pen>
-                        </GeometryDrawing>
-                    </DrawingBrush.Drawing>
-                </DrawingBrush>
-            </Canvas.Background>
-        </Canvas>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1" Content="Import playlist" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="16"></Label>
+        <Button Margin="5,5,5,5" Grid.Row="2" Grid.Column="1" Name="btnOpenPlaylist" Click="btnOpenPlaylist_Click">Open playlist</Button>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="3" Content="Export playlist" Foreground="{DynamicResource WindowForegroundBrush}" FontSize="16"></Label>
+        <Button Margin="5,5,5,5" Grid.Row="4" Grid.Column="1" Name="btnSavePlaylist" Click="btnSavePlaylist_Click">Save playlist</Button>
     </Grid>
 </Window>
