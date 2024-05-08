@@ -52,3 +52,4 @@ This class represents an equalizer band.
    ```csharp
    mainWindow.LoadAudioFile(filePath);
    ```
+![image](https://github.com/kamillo122/AudioProject/assets/67054069/0d5aaadc-fc41-46ee-9279-d0e5af2a45ce)
