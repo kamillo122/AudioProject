@@ -47,6 +47,8 @@ This interface defines methods for rendering waveform visualizations.
 ### 8. `EqualizerBand.cs`
 This class represents an equalizer band.
 
+![audioproject](https://github.com/kamillo122/AudioProject/assets/67054069/8d5733d8-8565-4572-a483-db53d3d94fa6)
+
 ## Usage
 1. **Loading an audio file**
    ```csharp
