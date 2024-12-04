@@ -55,8 +55,9 @@
             <Slider Minimum="0" TickFrequency="10" Maximum="100" Name="sliVolume" Width="50" Height="15" Value="80" ValueChanged="sliVolumeValueChanged"/>
         </StatusBarItem>
         <DockPanel Grid.Row="0" Grid.RowSpan="4" Margin="4,10,10,10" Grid.ColumnSpan="2" Grid.Column="1">
-            <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
-                <Button Name="btnOpenFile" Click="btnOpenFilesClick">Open files</Button>
+            <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,2" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Button Name="btnOpenFile" Click="btnOpenFilesClick" >Open files</Button>
+                <Button Name="btnOpenLink" Click="btnOpenLinkClick" Width="53.3" >Load link</Button>
             </WrapPanel>
             <ListBox Background="{DynamicResource WindowBackgroudBrush}" Foreground="{DynamicResource WindowForegroundBrush}" Name="lbFiles" MouseDoubleClick="lbFilesMouseDoubleClick"/>
         </DockPanel>

@@ -16,14 +16,19 @@ namespace AudioProject
         {
             return AudioPaths.Count;
         }
-        public List<string> GetAudioPaths() {  return AudioPaths; }
+        public void AddItem(string item)
+        {
+            AudioPaths.Add(item);
+            QueueIndex++;
+        }
+        public List<string> GetAudioPaths() { return AudioPaths; }
         public void SetQueueIndex(int index)
         {
             if (AudioPaths.Count == 0)
             {
                 return;
             }
-            if (index >= AudioPaths.Count || QueueIndex < 0)
+            if (index >= AudioPaths.Count || QueueIndex <= 0)
             {
                 return;
             }

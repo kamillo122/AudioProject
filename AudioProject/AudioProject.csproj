@@ -114,11 +114,18 @@
     <Compile Include="Equalizer.cs" />
     <Compile Include="EqualizerBand.cs" />
     <Compile Include="IWaveFormRenderer.cs" />
+    <Compile Include="LinkPromptWindow.xaml.cs">
+      <DependentUpon>LinkPromptWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visualization.cs" />
     <Compile Include="YouTubeAudioExtractor.cs" />
+    <Page Include="LinkPromptWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

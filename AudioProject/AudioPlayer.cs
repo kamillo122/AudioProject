@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace AudioProject
@@ -11,6 +12,7 @@ namespace AudioProject
         private WaveOut outputDevice;
         private AudioFileReader audioFileReader;
         private Equalizer equalizer;
+        private YouTubeAudioExtractor extractor = new YouTubeAudioExtractor();
         private readonly EqualizerBand[] bands;
 
         public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
@@ -126,7 +128,25 @@ namespace AudioProject
             Stop();
             CloseFile();
             EnsureDeviceCreated();
-            OpenFile(fileName);
+            if (fileName.IndexOf("youtube") != -1)
+            {
+                try
+                {
+                    byte[] audioBuffer = extractor.DownloadAudioToBuffer(fileName);
+                    string runningPath = AppDomain.CurrentDomain.BaseDirectory;
+                    string outputFilePath = string.Format("{0}Resources\\temp_audio.mp3", Path.GetFullPath(Path.Combine(runningPath, @"..\..\")));
+                    File.WriteAllBytes(outputFilePath, audioBuffer);
+                    OpenFile(outputFilePath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            else
+            {
+                OpenFile(fileName);
+            }
         }
         public static List<string> GetAudioDevices()
         {
@@ -177,7 +197,6 @@ namespace AudioProject
         }
         public void RecreateDevice(int deviceNumber)
         {
-            Console.WriteLine("Recreate device...");
             outputDevice.Stop();
             outputDevice.Dispose();
             outputDevice = null;

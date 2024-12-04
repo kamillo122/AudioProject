@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 using NAudio.Extras;
 using NAudio.Wave;
+using Microsoft.Win32;
 
 namespace AudioProject
 {
@@ -46,9 +47,22 @@ namespace AudioProject
                 updateSlider();
             }
         }
+        private void btnOpenLinkClick(object sender, RoutedEventArgs e)
+        {
+            LinkPromptWindow linkPromptWindow = new LinkPromptWindow();
+            linkPromptWindow.Owner = this;
+            bool? result = linkPromptWindow.ShowDialog();
+            if (result == true && linkPromptWindow.Link != String.Empty)
+            {
+                lbFiles.BeginInit();
+                lbFiles.Items.Add(linkPromptWindow.Link);
+                lbFiles.EndInit();
+                audioQueue.AddItem(linkPromptWindow.Link);
+            }
+        }
         private void btnOpenFilesClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             openFileDialog.Multiselect = true;
             openFileDialog.Filter = "Audio (*.mp3,*.wav,*aiff)|*.mp3;*.wav;*.aiff";
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -130,7 +144,7 @@ namespace AudioProject
         {
             if (WindowClosing)
             {
-                player.Dispose();
+                player?.Dispose();
             }
         }
         private void sliVolumeValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

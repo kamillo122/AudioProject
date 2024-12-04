@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 
 namespace AudioProject
 {
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-
     public class YouTubeAudioExtractor
     {
         // Method to download audio and get it as a byte buffer
         public byte[] DownloadAudioToBuffer(string videoUrl)
         {
             // Path to yt-dlp executable
-
-            string ytdlpPath = @"Audio";  // Update this path
+            string runningPath = AppDomain.CurrentDomain.BaseDirectory;
+            string ytdlpPath = string.Format("{0}Resources\\yt-dlp.exe", Path.GetFullPath(Path.Combine(runningPath, @"..\..\")));
 
             // Arguments for yt-dlp to download audio in best quality and extract it in MP3 format
             string arguments = $"-x --audio-format mp3 --output temp_audio.mp3 {videoUrl}";
@@ -39,7 +33,7 @@ namespace AudioProject
             }
 
             // Read the downloaded audio file into a byte array
-            string audioFilePath = "temp_audio.mp3";  // Temporary audio file path
+            string audioFilePath = @"temp_audio.mp3";  // Temporary audio file path
             if (File.Exists(audioFilePath))
             {
                 return File.ReadAllBytes(audioFilePath);
