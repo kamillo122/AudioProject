@@ -177,6 +177,7 @@ namespace AudioProject
         }
         public void RecreateDevice(int deviceNumber)
         {
+            Console.WriteLine("Recreate device...");
             outputDevice.Stop();
             outputDevice.Dispose();
             outputDevice = null;
