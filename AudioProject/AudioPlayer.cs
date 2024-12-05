@@ -136,7 +136,11 @@ namespace AudioProject
                     string runningPath = AppDomain.CurrentDomain.BaseDirectory;
                     string outputFilePath = string.Format("{0}Resources\\temp_audio.mp3", Path.GetFullPath(Path.Combine(runningPath, @"..\..\")));
                     File.WriteAllBytes(outputFilePath, audioBuffer);
-                    OpenFile(outputFilePath);
+                    if (File.Exists(outputFilePath)) 
+                    {
+                        File.WriteAllBytes(outputFilePath, audioBuffer);
+                        OpenFile(outputFilePath);
+                    }
                 }
                 catch (Exception ex)
                 {
