@@ -4,25 +4,44 @@ using System.Linq;
 
 namespace AudioProject
 {
-    public class AudioQueue
+    public static class AudioQueue
     {
-        private int QueueIndex = 0;
-        private List<string> AudioPaths = new List<string>();
-        public void UpdatePaths(string[] paths)
+        private static int QueueIndex = 0;
+        private static List<string> AudioPaths = new List<string>();
+        public static void OverridePaths(IEnumerable<string> paths)
         {
+            if (!paths.Any()) { return; }
             AudioPaths = paths.ToList();
         }
-        public int GetQueueLength()
+        public static void UpdatePaths(string[] paths)
+        {
+            AudioPaths = paths.ToList();
+            if (AudioPaths.Count <= 0) { return; }
+            for (int i = 0; i < AudioPaths.Count; i++)
+            {
+                for (int j = 0; j < paths.Length; j++)
+                {
+                    if (!String.Equals(AudioPaths[i], paths[j]))
+                    {
+                        AudioPaths[i] = paths[j];
+                    }
+                }
+            }
+        }
+        public static List<string> GetPaths()
+        {
+            return AudioPaths;
+        }
+        public static int GetQueueLength()
         {
             return AudioPaths.Count;
         }
-        public void AddItem(string item)
+        public static void AddItem(string item)
         {
             AudioPaths.Add(item);
             QueueIndex++;
         }
-        public List<string> GetAudioPaths() { return AudioPaths; }
-        public void SetQueueIndex(int index)
+        public static void SetQueueIndex(int index)
         {
             if (AudioPaths.Count == 0)
             {
@@ -34,11 +53,15 @@ namespace AudioProject
             }
             QueueIndex = index;
         }
-        public string GetCurrentAudio()
+        public static string GetCurrentAudio()
         {
+            if (!AudioPaths.Any())
+            {
+                return String.Empty;
+            }
             return AudioPaths[QueueIndex];
         }
-        public string GetNextAudio()
+        public static string GetNextAudio()
         {
             if (AudioPaths.Count == 0)
             {
@@ -52,7 +75,7 @@ namespace AudioProject
             QueueIndex++;
             return AudioPaths[QueueIndex];
         }
-        public string GetPrevAudio()
+        public static string GetPrevAudio()
         {
             if (AudioPaths.Count == 0)
             {
@@ -66,7 +89,7 @@ namespace AudioProject
             QueueIndex--;
             return AudioPaths[QueueIndex];
         }
-        public string GetRandomAudio()
+        public static string GetRandomAudio()
         {
             throw new NotImplementedException();
         }

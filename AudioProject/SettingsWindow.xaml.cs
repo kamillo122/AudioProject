@@ -14,8 +14,8 @@ namespace AudioProject
     {
         private readonly AudioPlayer Player;
         private readonly Visualization Visualization;
-        private readonly AudioQueue AudioQueue;
-        public SettingsWindow(AudioPlayer player, Visualization visualization, AudioQueue audioQueue)
+        private System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+        public SettingsWindow(AudioPlayer player, Visualization visualization)
         {
             InitializeComponent();
             ClrPickerBackground.SelectedColor = Colors.Black;
@@ -25,7 +25,6 @@ namespace AudioProject
             Loaded += OnSettingsLoaded;
             Player = player;
             Visualization = visualization;
-            AudioQueue = audioQueue;
             DrawEqualizerCurve();
         }
         private void OnSelectionChanged(object sender, EventArgs e)
@@ -34,7 +33,10 @@ namespace AudioProject
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Player.RecreateDevice(AudioDeviceComboBox.SelectedIndex);
+                    if (AudioDeviceComboBox.SelectedIndex != -1)
+                    {
+                        Player.RecreateDevice(AudioDeviceComboBox.SelectedIndex);
+                    }
                 });
             }
         }
@@ -62,6 +64,7 @@ namespace AudioProject
         private void ClrPickerWaveFormSelectedColorChanged(object sender, EventArgs e)
         {
             Application.Current.Resources["WaveFormBackgroundBrush"] = new SolidColorBrush(ClrPickerWaveForm.SelectedColor.Value);
+            path.Stroke = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;
             Visualization?.UpdateWaveFormColor();
         }
         private void DrawEqualizerCurve()
@@ -92,8 +95,7 @@ namespace AudioProject
             double scale = canvasHeight / (maxBandValue - minBandValue);
 
             // Create a Path to represent the curve
-            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
-            path.Stroke = Brushes.GreenYellow;  // Set the color of the curve (same as the waveform color)
+            path.Stroke = Application.Current.Resources["WaveFormBackgroundBrush"] as SolidColorBrush;  // Set the color of the curve (same as the waveform color)
             path.StrokeThickness = 2;
 
             // Create a PathGeometry to define the curve
@@ -191,7 +193,7 @@ namespace AudioProject
             {
                 string[] paths = File.ReadAllLines(openFileDialog.FileName);
                 AudioQueue.UpdatePaths(paths);
-                ((MainWindow)this.Owner).UpdatePaths();
+                //((MainWindow)this.Owner).UpdatePaths();
             }
         }
 
@@ -201,7 +203,7 @@ namespace AudioProject
             saveFileDialog.Filter = "Playlist (*.txt)|*.txt;";
             if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                File.WriteAllLines(saveFileDialog.FileName, AudioQueue.GetAudioPaths());
+                //File.WriteAllLines(saveFileDialog.FileName, AudioQueue.GetAudioPaths());
             }
         }
     }

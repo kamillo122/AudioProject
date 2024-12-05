@@ -2,7 +2,6 @@
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 
 namespace AudioProject
@@ -128,29 +127,7 @@ namespace AudioProject
             Stop();
             CloseFile();
             EnsureDeviceCreated();
-            if (fileName.IndexOf("youtube") != -1)
-            {
-                try
-                {
-                    byte[] audioBuffer = extractor.DownloadAudioToBuffer(fileName);
-                    string runningPath = AppDomain.CurrentDomain.BaseDirectory;
-                    string outputFilePath = string.Format("{0}Resources\\temp_audio.mp3", Path.GetFullPath(Path.Combine(runningPath, @"..\..\")));
-                    File.WriteAllBytes(outputFilePath, audioBuffer);
-                    if (File.Exists(outputFilePath)) 
-                    {
-                        File.WriteAllBytes(outputFilePath, audioBuffer);
-                        OpenFile(outputFilePath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-            else
-            {
-                OpenFile(fileName);
-            }
+            OpenFile(fileName);
         }
         public static List<string> GetAudioDevices()
         {

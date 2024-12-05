@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Forms;
 
 namespace AudioProject
 {
@@ -20,16 +11,64 @@ namespace AudioProject
     public partial class LinkPromptWindow : Window
     {
         public string Link { get; set; }
+        private readonly YouTubeAudioExtractor extractor = new YouTubeAudioExtractor();
         public LinkPromptWindow()
         {
             InitializeComponent();
         }
         private void okButtonClick(object sender, RoutedEventArgs e)
         {
-            if (LinkTextBox.Text != String.Empty)
+            if (LinkTextBox.Text != System.String.Empty)
             {
                 Link = LinkTextBox.Text;
-                DialogResult = true;
+                var confirmSaving = System.Windows.Forms.MessageBox.Show("Are you want to save this audio?",
+                                     "Saving audio",
+                                     MessageBoxButtons.YesNo);
+                if (confirmSaving == System.Windows.Forms.DialogResult.Yes)
+                {
+                    try
+                    {
+                        System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+                        saveFileDialog.Filter = "Audio (*.mp3)|*.mp3";
+                        if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            byte[] audioBuffer = extractor.DownloadAudioToBuffer(Link, saveFileDialog.FileName);
+                            AudioQueue.AddItem(saveFileDialog.FileName);
+                            ((MainWindow)Owner).UpdatePaths();
+                            DialogResult = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message);
+                        DialogResult = false;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        string path = Path.GetTempPath() + $"{Path.GetFileName(Link).Replace("watch?v=", "").Replace("_", "")}.mp3";
+                        if (File.Exists(path))
+                        {
+                            AudioQueue.AddItem(path);
+                            ((MainWindow)Owner).UpdatePaths();
+                            DialogResult = true;
+                        }
+                        else
+                        {
+                            byte[] audioBuffer = extractor.DownloadAudioToBuffer(Link, path);
+                            AudioQueue.AddItem(path);
+                            ((MainWindow)Owner).UpdatePaths();
+                            DialogResult = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message);
+                        DialogResult = false;
+                    }
+                }
             }
         }
 

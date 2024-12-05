@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using NAudio.Extras;
 using NAudio.Wave;
 using Microsoft.Win32;
+using System.Collections;
+using System.Linq;
 
 namespace AudioProject
 {
@@ -19,7 +21,6 @@ namespace AudioProject
     public partial class MainWindow : Window
     {
         private AudioPlayer player = new AudioPlayer();
-        private AudioQueue audioQueue = new AudioQueue();
         private readonly Visualization visualization;
         private bool userIsDraggingSlider = false;
         public bool WindowClosing = false;
@@ -47,6 +48,16 @@ namespace AudioProject
                 updateSlider();
             }
         }
+        public void UpdatePaths()
+        {
+            lbFiles.Items.Clear();
+            lbFiles.BeginInit();
+            foreach (string path in AudioQueue.GetPaths())
+            {
+                lbFiles.Items.Add(Path.GetFileName(path));
+            }
+            lbFiles.EndInit();
+        }
         private void btnOpenLinkClick(object sender, RoutedEventArgs e)
         {
             LinkPromptWindow linkPromptWindow = new LinkPromptWindow();
@@ -54,10 +65,7 @@ namespace AudioProject
             bool? result = linkPromptWindow.ShowDialog();
             if (result == true && linkPromptWindow.Link != String.Empty)
             {
-                lbFiles.BeginInit();
-                lbFiles.Items.Add(linkPromptWindow.Link);
-                lbFiles.EndInit();
-                audioQueue.AddItem(linkPromptWindow.Link);
+                //player.Load(AudioQueue.GetCurrentAudio());
             }
         }
         private void btnOpenFilesClick(object sender, RoutedEventArgs e)
@@ -68,7 +76,7 @@ namespace AudioProject
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
 
-                audioQueue.UpdatePaths(openFileDialog.FileNames);
+                AudioQueue.UpdatePaths(openFileDialog.FileNames);
                 lbFiles.BeginInit();
                 foreach (string filename in openFileDialog.FileNames)
                 {
@@ -77,7 +85,7 @@ namespace AudioProject
                 lbFiles.EndInit();
                 if (!player.CheckAudioStream() && !player.CheckDidDeviceCreated())
                 {
-                    player.Load(audioQueue.GetCurrentAudio());
+                    player.Load(AudioQueue.GetCurrentAudio());
                 }
             }
         }
@@ -87,7 +95,7 @@ namespace AudioProject
         }
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
-            if (audioQueue.GetQueueLength() <= 0)
+            if (AudioQueue.GetQueueLength() <= 0)
             {
                 return;
             }
@@ -97,7 +105,7 @@ namespace AudioProject
                 {
                     audioTimer.Start();
                 }
-                if (audioQueue.GetCurrentAudio() == String.Empty)
+                if (AudioQueue.GetCurrentAudio() == String.Empty)
                 {
                     PlayButton.Content = FindResource("Stop");
                     return;
@@ -106,7 +114,7 @@ namespace AudioProject
                 {
                     try
                     {
-                        player.Load(audioQueue.GetNextAudio());
+                        player.Load(AudioQueue.GetNextAudio());
                     }
                     catch (FileNotFoundException ex)
                     {
@@ -117,7 +125,7 @@ namespace AudioProject
                 if (player.CheckAudioStream() && player.CheckDidDeviceCreated())
                 {
                     player.Play();
-                    String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+                    String file = Path.GetFileName(AudioQueue.GetCurrentAudio());
                     String text = "Current playing : " + file;
                     currentPlaying.Text = text;
                     PlayButton.Content = FindResource("Stop");
@@ -183,7 +191,7 @@ namespace AudioProject
                 updateSlider();
                 lblProgressStatus.Text = TimeSpan.FromSeconds(sliProgress.Value).ToString(@"hh\:mm\:ss");
             }
-            if (audioQueue.GetCurrentAudio() != String.Empty)
+            if (AudioQueue.GetCurrentAudio() != String.Empty)
             {
                 visualization.Reset();
                 player.Play();
@@ -196,9 +204,9 @@ namespace AudioProject
         private void NextClick(object sender, RoutedEventArgs e)
         {
             player.Stop();
-            player.Load(audioQueue.GetNextAudio());
+            player.Load(AudioQueue.GetNextAudio());
             player.Play();
-            String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+            String file = Path.GetFileName(AudioQueue.GetCurrentAudio());
             String text = "Current playing : " + file;
             currentPlaying.Text = text;
             visualization.Reset();
@@ -210,9 +218,9 @@ namespace AudioProject
         private void PrevClick(object sender, RoutedEventArgs e)
         {
             player.Stop();
-            player.Load(audioQueue.GetPrevAudio());
+            player.Load(AudioQueue.GetPrevAudio());
             player.Play();
-            String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+            String file = Path.GetFileName(AudioQueue.GetCurrentAudio());
             String text = "Current playing : " + file;
             currentPlaying.Text = text;
             visualization.Reset();
@@ -223,27 +231,18 @@ namespace AudioProject
         }
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            SettingsWindow settingsWindow = new SettingsWindow(player, visualization, audioQueue);
+            SettingsWindow settingsWindow = new SettingsWindow(player, visualization);
             settingsWindow.Owner = this;
             settingsWindow.Show();
-        }
-        public void UpdatePaths()
-        {
-            lbFiles.BeginInit();
-            foreach (string filename in audioQueue.GetAudioPaths())
-            {
-                lbFiles.Items.Add(Path.GetFileName(filename));
-            }
-            lbFiles.EndInit();
         }
         private void lbFilesMouseDoubleClick(object sender, RoutedEventArgs e)
         {
             if (lbFiles.SelectedItem != null)
             {
                 player.Stop();
-                audioQueue.SetQueueIndex(lbFiles.SelectedIndex);
-                player.Load(audioQueue.GetCurrentAudio());
-                String file = Path.GetFileName(audioQueue.GetCurrentAudio());
+                AudioQueue.SetQueueIndex(lbFiles.SelectedIndex);
+                player.Load(AudioQueue.GetCurrentAudio());
+                String file = Path.GetFileName(AudioQueue.GetCurrentAudio());
                 String text = "Current playing : " + file;
                 currentPlaying.Text = text;
                 visualization.Reset();
