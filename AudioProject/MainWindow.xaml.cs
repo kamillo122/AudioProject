@@ -12,6 +12,7 @@ using NAudio.Wave;
 using Microsoft.Win32;
 using System.Collections;
 using System.Linq;
+using System.Threading;
 
 namespace AudioProject
 {
@@ -233,7 +234,7 @@ namespace AudioProject
         {
             SettingsWindow settingsWindow = new SettingsWindow(player, visualization);
             settingsWindow.Owner = this;
-            settingsWindow.Show();
+            Dispatcher.Invoke(() => { settingsWindow.Show(); });
         }
         private void lbFilesMouseDoubleClick(object sender, RoutedEventArgs e)
         {

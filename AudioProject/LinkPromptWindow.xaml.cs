@@ -34,7 +34,7 @@ namespace AudioProject
                         {
                             byte[] audioBuffer = extractor.DownloadAudioToBuffer(Link, saveFileDialog.FileName);
                             AudioQueue.AddItem(saveFileDialog.FileName);
-                            ((MainWindow)Owner).UpdatePaths();
+                            Dispatcher.Invoke(() => { ((MainWindow)Owner).UpdatePaths(); });
                             DialogResult = true;
                         }
                     }
@@ -52,14 +52,14 @@ namespace AudioProject
                         if (File.Exists(path))
                         {
                             AudioQueue.AddItem(path);
-                            ((MainWindow)Owner).UpdatePaths();
+                            Dispatcher.Invoke(() => { ((MainWindow)Owner).UpdatePaths(); });
                             DialogResult = true;
                         }
                         else
                         {
                             byte[] audioBuffer = extractor.DownloadAudioToBuffer(Link, path);
                             AudioQueue.AddItem(path);
-                            ((MainWindow)Owner).UpdatePaths();
+                            Dispatcher.Invoke(() => { ((MainWindow)Owner).UpdatePaths(); });
                             DialogResult = true;
                         }
                     }

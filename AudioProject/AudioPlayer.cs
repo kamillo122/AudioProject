@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 
 namespace AudioProject
@@ -11,7 +12,6 @@ namespace AudioProject
         private WaveOut outputDevice;
         private AudioFileReader audioFileReader;
         private Equalizer equalizer;
-        private YouTubeAudioExtractor extractor = new YouTubeAudioExtractor();
         private readonly EqualizerBand[] bands;
 
         public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
@@ -162,6 +162,10 @@ namespace AudioProject
                 aggregator.MaximumCalculated += (s, a) => MaximumCalculated?.Invoke(this, a);
                 equalizer = new Equalizer(aggregator, bands);
                 outputDevice.Init(equalizer);
+                while (outputDevice.PlaybackState == PlaybackState.Playing)
+                {
+                    Thread.Sleep(500);
+                }
             }
             catch (Exception e)
             {
